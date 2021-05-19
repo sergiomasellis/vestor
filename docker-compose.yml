@@ -1,0 +1,58 @@
+version: "3.8"
+
+x-common-variables: &common-variables
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: password
+
+volumes:
+  pg_sandbox_data:
+  pg_development_data:
+
+services:
+  db:
+    image: postgres:11.2
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+      - "pg_${PLAID_ENV}_data:/var/lib/postgresql/data"
+    ports:
+      - 5432:5432
+    environment: *common-variables
+
+  backend:
+    build: ./backend
+    image: vestor/vestor-backend:1.0.0
+    ports:
+      - 8000:8000
+    environment:
+      <<: *common-variables
+      PLAID_CLIENT_ID:
+      PLAID_SECRET_SANDBOX:
+      PLAID_SECRET_DEVELOPMENT:
+      PLAID_ENV:
+      PORT: 8000
+      DB_PORT: 5432
+      DB_HOST_NAME: db
+    depends_on:
+      - db
+
+  ngrok:
+    build: ./ngrok
+    image: vestor/vestor-nrok:1.0.0
+    command: ["ngrok", "http", "server:8000"]
+    ports:
+      - 4040:4040
+    depends_on:
+      - backend
+
+  ui:
+    build: ./ui
+    image: vestor/vestor-ui:1.0.0
+    ports:
+      - 3000:3000
+    tty: true
+    stdin_open: true
+    environment:
+      REACT_APP_PLAID_ENV: ${PLAID_ENV}
+      REACT_APP_SERVER_PORT: 3000
+    depends_on:
+      - backend

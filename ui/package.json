@@ -2,7 +2,8 @@
   "name": "vestor",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "start": "npm run dev",
+    "dev": "vite --host",
     "build": "vite build",
     "serve": "vite preview"
   },
