@@ -1,8 +1,8 @@
 <template>
   <sd-container class="landing">
     <sd-row>
-      <sd-col :lg="4">
-        <img :src="`../test2.jpg`" alt />
+      <sd-col>
+        <img :src="`../Saly-19.png`" alt />
         <h1>Welcome to Vestor</h1>
         <h2>Start investing commsion-free</h2>
         <small>
@@ -13,9 +13,9 @@
       </sd-col>
     </sd-row>
     <sd-row>
-      <sd-col :sm="12" :md="12" :lg="4">
+      <sd-col :sm="12" :md="12" :lg="12">
         <sd-button block pill size="sm" class="landing__signup">Sign up</sd-button>
-        <sd-button block pill flat size="sm" @click="handleDialogOpen()">Log in</sd-button>
+        <sd-button block flat size="sm" @click="handleDialogOpen()">Log in</sd-button>
       </sd-col>
     </sd-row>
     <sd-dialog aside v-model:active="modal">

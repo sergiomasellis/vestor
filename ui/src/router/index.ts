@@ -11,12 +11,12 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: defineAsyncComponent(() => import('../components/Login.vue'))
+    component: () => import('../components/Login.vue')
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: defineAsyncComponent(() => import('../components/Dashboard.vue'))
+    component: () => import('../components/Dashboard.vue')
   }
 ]
 
