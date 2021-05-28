@@ -5,16 +5,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
-
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'App',
-  components: {}
-})
+  name: "App",
+  components: {},
+});
 </script>
 
 <style lang="scss">
-  @use '../node_modules/@strizich/sdui/dist/scss/engine';
-  @import url('../node_modules/@strizich/sdui/dist/style.css');
+@use '../node_modules/@strizich/sdui/dist/scss/engine';
+@import url("../node_modules/@strizich/sdui/dist/style.css");
+
+
+// UTIL STYLES
+.isPositive {
+  color: var(--success-highlight);
+}
+.isNegative {
+  color: var(--danger);
+}
 </style>

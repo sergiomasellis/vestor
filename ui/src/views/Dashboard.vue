@@ -8,21 +8,12 @@
         <sd-row>
           <sd-col :xs="12" :md="7">
             <h1>Dashboard</h1>
-            <div class="balance">
-              <sd-button theme="default" flat size="sm" iconEnd="info">
-                Current Value
-                <sd-tooltip>Changes in account value/return calculations may occur throughout the day due to several factors including market movements, your deposits and withdrawals, and the availability of third party data and are not necessarily a reflection of actual account value. vestor prepared this dashboard for informational purposes and your convenience, but your vestor account statement is the only official record of your actual account value and holdings.</sd-tooltip>
-              </sd-button>
-              <h2 class="balance__title">{{$filters.toCurrency(accountBalance)}}</h2>
-              <sd-row class="balance__content">
-                <sd-col>Starting value</sd-col>
-                <sd-col>{{dateOfAccountCreation}}</sd-col>
-              </sd-row>
-              <sd-row class="balance__content">
-                <sd-col class="balance_muted-text">Net cash flow</sd-col>
-                <sd-col :class="[computedCashFlow]">{{$filters.toCurrency(netCashFlow, true)}}</sd-col>
-              </sd-row>
-            </div>
+            <!-- Account Balance component -->
+            <account-balance
+              :accountBalance="accountBalance"
+              :dateOfAccountCreation="dateOfAccountCreation"
+              :netCashFlow="netCashFlow"
+            />
           </sd-col>
           <sd-col>
             <sd-card>
@@ -33,7 +24,7 @@
                     <sd-col :sm="6">
                       <h5>Cash Balance</h5>
                       <h3>
-                        <strong>{{$filters.toCurrency(cashBalance)}}</strong>
+                        <strong>{{toCurrency(cashBalance)}}</strong>
                       </h3>
                     </sd-col>
                     <sd-col>
@@ -85,11 +76,12 @@
                   <sd-col>
                     <div class="gains">
                       <h5>
-                        <strong>{{$filters.toCurrency(dailyAccountBalance)}}</strong>
+                        <strong>{{toCurrency(dailyAccountBalance)}}</strong>
                       </h5>
-                      <small
-                        :class="[computedCashFlow]"
-                      >{{$filters.toCurrency(dailyCashFlow, true)}} ▲▼ 50.95%</small>
+                      <small>
+                        <net-indicator-text :value="dailyCashFlow" /> 
+                        <net-indicator-text :value="dailyNetPercentage" type="percentage" />
+                      </small>
                     </div>
                     <vue3-chart-js
                       :id="doughnutChart.id"
@@ -109,7 +101,7 @@
               </sd-card-body>
             </sd-card>
           </sd-col>
-          <sd-col>
+          <sd-col :sm="8">
             <sd-card>
               <sd-card-body>
                 <vue3-chart-js ref="accountHistoryChartRef" v-bind="{...accountHistoryChart}"></vue3-chart-js>
@@ -131,11 +123,14 @@ import {
   watchEffect,
   defineComponent,
 } from "vue";
-import Navigation from "./Navigation.vue";
+import Navigation from "../components/Navigation.vue";
+import AccountBalance from "../components/AccountBalance.vue";
 import Vue3ChartJs from "@j-t-mcc/vue3-chartjs";
+import toCurrency from "../utils/toCurrency";
+import NetIndicatorText from "../components/NetIndicatorText.vue";
 
 export default defineComponent({
-  components: { Navigation, Vue3ChartJs },
+  components: { Navigation, Vue3ChartJs, AccountBalance, NetIndicatorText },
   setup() {
     const state = reactive({
       accountBalance: 100000.95,
@@ -143,17 +138,10 @@ export default defineComponent({
       netCashFlow: 20000.45,
       dailyAccountBalance: 100000.95,
       dailyCashFlow: 15433.23,
+      dailyNetPercentage: 0.0578,
       dateOfAccountCreation: "Jun, 15, 2018",
       account_history: [10000, 15000, 25000, 23500, 90000, 100000],
       autoInvest: false,
-    });
-
-    const computedCashFlow = computed(() => {
-      let positiveCash = state.netCashFlow > 0;
-      return {
-        isPositive: positiveCash,
-        isNegative: !positiveCash,
-      };
     });
 
     const accountHistoryChartRef = ref(null);
@@ -281,11 +269,11 @@ export default defineComponent({
     return {
       ...toRefs(state),
       accountHistoryChartRef,
-      computedCashFlow,
       doughnutChart,
       accountHistoryChart,
       oneWeek,
       oneMonth,
+      toCurrency,
     };
   },
 });
@@ -309,27 +297,10 @@ export default defineComponent({
     padding-bottom: 140px;
   }
 
-  .isPositive {
-    color: var(--success-highlight);
-  }
-  .isNegative {
-    color: var(--danger);
-  }
-
   h1 {
     font-size: 3rem;
     font-weight: 400;
     padding-top: 36px;
-  }
-
-  .balance {
-    &__title {
-      font-size: 2.5rem;
-    }
-    &__content {
-      color: var(--text-accent);
-      font-size: 0.8rem;
-    }
   }
 
   #doughnut {

@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import Landing from '../components/Landing.vue'
-import {defineAsyncComponent} from 'vue'
+import Landing from '../views/Landing.vue'
+
 
 const routes = [
   {
@@ -11,12 +11,12 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../components/Login.vue')
+    component: () => import('../views/Login.vue')
   },
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('../components/Dashboard.vue')
+    component: () => import('../views/Dashboard.vue')
   }
 ]
 
