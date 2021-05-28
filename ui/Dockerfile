@@ -1,17 +1,13 @@
-FROM node:lts-alpine
-
-COPY ["package.json", "/opt/ui/"]
-# COPY ["package-lock.json", "/opt/ui/"]
-
-WORKDIR /opt/ui
-
+#  build stage
+FROM node:lts-alpine as build-stage
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
+COPY . .
+RUN npm run build
 
-ENV PATH /opt/ui/node_modules/.bin:$PATH
-
-COPY ["src/", "/opt/ui/src/"]
-COPY ["public/", "/opt/ui/public/"]
-
-EXPOSE 3000
-
-CMD ["npm", "start"]
+# production stage
+FROM nginx:stable-alpine as production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

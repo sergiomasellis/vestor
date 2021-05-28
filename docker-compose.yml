@@ -38,21 +38,21 @@ services:
   ngrok:
     build: ./ngrok
     image: vestor/vestor-nrok:1.0.0
-    command: ["ngrok", "http", "server:8000"]
+    command: ["ngrok", "http", "ui:3000"]
     ports:
       - 4040:4040
     depends_on:
       - backend
 
   ui:
-    build: ./ui
+    build: 
+      context: ./ui
+      dockerfile: Dockerfile.dev
     image: vestor/vestor-ui:1.0.0
     ports:
       - 3000:3000
-    tty: true
-    stdin_open: true
+      - 35729:35729
     environment:
       REACT_APP_PLAID_ENV: ${PLAID_ENV}
-      REACT_APP_SERVER_PORT: 3000
     depends_on:
       - backend

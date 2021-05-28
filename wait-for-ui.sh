@@ -13,7 +13,7 @@ done
 cat <<EOF
 
 The client is ready!
-Open localhost:3000 in your browser to view the ui.
+Open 0.0.0.0:3000 in your browser to view the ui.
 Run 'make logs' to view the service logs.
 Run 'make stop' to stop the docker containers.
 Run 'make help' to view other available commands.
