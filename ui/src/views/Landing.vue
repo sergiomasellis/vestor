@@ -1,8 +1,8 @@
 <template>
-  <sd-container class="landing">
+<section class="landing">
+  <sd-container>
     <sd-row>
       <sd-col>
-        <img :src="`../Saly-19.png`" alt />
         <h1>Welcome to Vestor</h1>
         <h2>Start investing commsion-free</h2>
         <small>
@@ -30,6 +30,7 @@
       <sd-dialog-footer />
     </sd-dialog>
   </sd-container>
+  </section>
 </template>
 
 <script>
@@ -60,6 +61,8 @@ export default {
   text-align: center;
   position: relative;
   padding-top: 300px;
+  background: url(../dashboard-bg.svg);
+  height: 100vh;
 
   a {
     color: var(--primary);
@@ -77,18 +80,9 @@ export default {
     margin-top: 40px;
     margin-bottom: 8px;
   }
+
   &__login {
     color: var(--primary);
-  }
-
-  img {
-    width: 100%;
-    height: auto;
-    position: absolute;
-    top: -326px;
-    // z-index: -1;
-    opacity: 0.2;
-    left: 0;
   }
 }
 </style>

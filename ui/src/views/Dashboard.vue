@@ -60,11 +60,14 @@
       <sd-container>
         <sd-row>
           <sd-col class="dashboard__datefilter">
-            <sd-button theme="primary" size="xs">1D</sd-button>
-            <sd-button theme="dark" size="xs" @click="oneWeek">1W</sd-button>
-            <sd-button theme="dark" size="xs" @click="oneMonth">1M</sd-button>
-            <sd-button theme="dark" size="xs">1Q</sd-button>
-            <sd-button theme="dark" size="xs">1Y</sd-button>
+            <sd-button
+              v-for="(filter, index) in accountHistoryFilter"
+              :key="index"
+              size="xs"
+              :theme="(filter.state) ? 'primary': 'dark'"
+              @click="setFilterBy(index)"
+              :active="(filter.state) ? true : false"
+            >{{filter.label}}</sd-button>
           </sd-col>
         </sd-row>
         <sd-row>
@@ -79,7 +82,7 @@
                         <strong>{{toCurrency(dailyAccountBalance)}}</strong>
                       </h5>
                       <small>
-                        <net-indicator-text :value="dailyCashFlow" /> 
+                        <net-indicator-text :value="dailyCashFlow" />&nbsp;
                         <net-indicator-text :value="dailyNetPercentage" type="percentage" />
                       </small>
                     </div>
@@ -142,7 +145,25 @@ export default defineComponent({
       dateOfAccountCreation: "Jun, 15, 2018",
       account_history: [10000, 15000, 25000, 23500, 90000, 100000],
       autoInvest: false,
+      accountHistoryFilter: [
+        { label: "1D", state: true },
+        { label: "1W", state: false },
+        { label: "1M", state: false },
+        { label: "1Q", state: false },
+        { label: "1Y", state: false },
+      ],
+      accountHistoryFilterActive: 0,
     });
+
+    const setFilterBy = (index) => {
+      // reset current 
+      state.accountHistoryFilter[state.accountHistoryFilterActive].state = false;
+      state.accountHistoryFilter[index].state = !state.accountHistoryFilter[index].state;
+      state.accountHistoryFilterActive = index;
+    };
+
+
+    const oneDay = () => {};
 
     const accountHistoryChartRef = ref(null);
 
@@ -197,45 +218,6 @@ export default defineComponent({
       },
     };
 
-    const oneWeek = () => {
-      console.log(accountHistoryChart.data.datasets.data);
-      accountHistoryChart.data.datasets[0].data = [
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-      ];
-      accountHistoryChartRef.value.update(250);
-      console.log(accountHistoryChart.data.datasets.data);
-    };
-
-    const oneMonth = () => {
-      const chartDataSet = accountHistoryChart.data.datasets[0];
-      accountHistoryChart.data.labels = [
-        "ine",
-        "ine",
-        "ine",
-        "ine",
-        "ine",
-        "ine",
-        "ine",
-      ];
-
-      chartDataSet.data = [
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-        Math.floor(Math.random() * 500),
-      ];
-      accountHistoryChartRef.value.update(600);
-      console.log(accountHistoryChart.data.datasets.data);
-    };
-
     const doughnutChart = {
       id: "doughnut",
       type: "doughnut",
@@ -266,14 +248,15 @@ export default defineComponent({
       },
     };
 
+
     return {
       ...toRefs(state),
       accountHistoryChartRef,
       doughnutChart,
       accountHistoryChart,
-      oneWeek,
-      oneMonth,
+      oneDay,
       toCurrency,
+      setFilterBy
     };
   },
 });
