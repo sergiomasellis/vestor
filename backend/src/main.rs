@@ -33,7 +33,7 @@
 //     let api_key = "";
 //
 //     // let request_url = format!("{}", user);
-//     let request_url = "https://api.polygon.io/v3/reference/tickers?ticker=VOO&market=stocks&active=true&sort=ticker&order=asc&limit=10&apiKey=pGl8Up9MF6RzMrGn3TPhFzFJvce8iQTv";
+//     let request_url = "https://api.polygon.io/v3/reference/tickers?ticker=VOO&market=stocks&active=true&sort=ticker&order=asc&limit=10&apiKey=";
 //
 //
 //     let json: Root = reqwest::get(request_url).await?.json()?;
